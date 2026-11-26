@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ko" data-theme="cream">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D-Day</title>
+<style>
+  *{box-sizing:border-box}
+  :root{
+    --bg:#F4EEE3; --win:#FFFDF8; --bar:#FAF4E8; --ink:#2A2721; --muted:#8A8376; --line:#EADFCD;
+    --accent:#AD7949; --accent2:#6E8F6A; --soft:#F4EBDC; --shadow:0 12px 28px rgba(96,74,42,.13);
+  }
+  html[data-theme="sage"]{
+    --bg:#E9EFE6; --win:#FDFEFB; --bar:#F2F7F0; --ink:#243026; --muted:#78897C; --line:#D9E5D7;
+    --accent:#4F8261; --accent2:#8FB295; --soft:#E6F0E2; --shadow:0 12px 28px rgba(46,74,52,.14);
+  }
+  html[data-theme="navy"]{
+    --bg:#0C1220; --win:#141C2B; --bar:#19222F; --ink:#E9EEF7; --muted:#8492A8; --line:#27324A;
+    --accent:#7FA1FF; --accent2:#45CEB0; --soft:#1D2739; --shadow:0 14px 32px rgba(0,0,0,.5);
+  }
+  html[data-theme="blush"]{
+    --bg:#FAEEEF; --win:#FFFCFC; --bar:#FDF2F3; --ink:#33242A; --muted:#967C82; --line:#F0DADC;
+    --accent:#C06078; --accent2:#D89F8B; --soft:#F8E7E8; --shadow:0 12px 28px rgba(120,60,70,.14);
+  }
+  html,body{height:100%;margin:0}
+  body{
+    display:flex; padding:clamp(5px,1.6vw,13px); background:transparent; overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;
+    color:var(--ink); -webkit-font-smoothing:antialiased; font-size:14px;
+  }
+  .win{
+    flex:1; min-width:0; display:flex; flex-direction:column; border-radius:15px;
+    background:var(--win); border:1px solid var(--line); box-shadow:var(--shadow); overflow:hidden;
+    position:relative;
+  }
+  .win::after{
+    content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit;
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,0) 45%);
+  }
+  .bar{
+    flex:0 0 34px; height:34px; display:flex; align-items:center; gap:10px; padding:0 12px;
+    background:var(--bar); border-bottom:1px solid var(--line);
+  }
+  .lights{display:flex; gap:6px; flex:none}
+  .lights i{display:block; width:9px; height:9px; border-radius:50%}
+  .lights .r{background:#FF5F57} .lights .y{background:#FEBC2E} .lights .g{background:#28C840}
+  .ttl{
+    font-size:12.5px; font-weight:600; letter-spacing:-.01em; color:var(--ink); opacity:.82;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:48%;
+  }
+  .spacer{flex:1}
+  .clock{font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums; letter-spacing:.02em; white-space:nowrap}
+  main{
+    flex:1; min-height:0; display:flex; align-items:center; gap:clamp(10px,3.2vw,26px);
+    padding:clamp(10px,3vw,20px); flex-wrap:wrap;
+  }
+  .hero{flex:1 1 150px; min-width:0; display:flex; flex-direction:column; gap:2px}
+  .kicker{
+    font-size:10.5px; font-weight:700; letter-spacing:.16em; color:var(--muted); text-transform:uppercase;
+    display:flex; align-items:center; gap:6px;
+  }
+  .kicker::before{content:""; width:14px; height:2px; border-radius:2px; background:var(--accent); opacity:.8}
+  .big{display:flex; align-items:baseline; gap:2px; line-height:.95; letter-spacing:-.045em}
+  .big .pre{font-size:clamp(18px,4.6vw,30px); font-weight:700; color:var(--accent); letter-spacing:-.02em}
+  .big .num{
+    font-size:clamp(46px,13vw,84px); font-weight:750; color:var(--ink);
+    font-variant-numeric:tabular-nums; letter-spacing:-.05em;
+  }
+  .big .num.hot{color:var(--accent)}
+  .target{margin-top:4px; font-size:12.5px; color:var(--muted); letter-spacing:-.01em}
+  .target b{color:var(--ink); font-weight:600}
+  .side{flex:1 1 210px; min-width:0; display:flex; flex-direction:column; gap:12px}
+  .ptop{display:flex; justify-content:space-between; align-items:baseline; font-size:11.5px; color:var(--muted); margin-bottom:6px}
+  .ptop b{font-size:12.5px; color:var(--ink); font-variant-numeric:tabular-nums; font-weight:650}
+  .track{height:8px; border-radius:99px; background:var(--soft); overflow:hidden}
+  .fill{
+    height:100%; width:0%; border-radius:99px;
+    background:linear-gradient(90deg,var(--accent2),var(--accent));
+    transition:width 1.1s cubic-bezier(.2,.8,.2,1);
+  }
+  .pbot{display:flex; justify-content:space-between; margin-top:6px; font-size:10.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .stats{display:flex; gap:6px}
+  .chip{
+    flex:1; min-width:0; padding:7px 8px; border-radius:10px; background:var(--soft);
+    display:flex; flex-direction:column; gap:1px;
+  }
+  .chip span{font-size:10px; color:var(--muted); letter-spacing:-.01em; white-space:nowrap}
+  .chip b{font-size:14px; font-weight:700; letter-spacing:-.02em; font-variant-numeric:tabular-nums; white-space:nowrap}
+  @media (max-width:430px){
+    .ttl{max-width:40%}
+    .side{flex-basis:100%}
+    .stats .chip:nth-child(3){display:none}
+  }
+  @media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+    <div class="ttl" id="ttl">D-Day</div>
+    <div class="spacer"></div>
+    <div class="clock" id="clock">--:--</div>
+  </div>
+  <main>
+    <section class="hero">
+      <div class="kicker" id="kicker">D-DAY</div>
+      <div class="big"><span class="pre" id="pre">D-</span><span class="num" id="num">-</span></div>
+      <div class="target" id="target">날짜 파라미터를 넣어 주세요</div>
+    </section>
+    <section class="side">
+      <div class="progress">
+        <div class="ptop"><span>진행률</span><b id="pct">-</b></div>
+        <div class="track"><div class="fill" id="fill"></div></div>
+        <div class="pbot"><span id="pstart">시작</span><span id="pend">목표</span></div>
+      </div>
+      <div class="stats">
+        <div class="chip"><span>남은 날</span><b id="left">-</b></div>
+        <div class="chip"><span>지난 날</span><b id="gone">-</b></div>
+        <div class="chip"><span>남은 주</span><b id="weeks">-</b></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+(function(){
+  var q = new URLSearchParams(location.search);
+  var THEMES = ['cream','sage','navy','blush'];
+  var theme = (q.get('theme') || 'cream').toLowerCase();
+  document.documentElement.setAttribute('data-theme', THEMES.indexOf(theme) >= 0 ? theme : 'cream');
+
+  var title = (q.get('title') || '').trim() || 'D-Day';
+  document.getElementById('ttl').textContent = title;
+  document.title = title + ' · D-Day';
+
+  var WD = ['일','월','화','수','목','금','토'];
+  var DAY = 86400000;
+
+  function ymd(s){
+    if(!s) return null;
+    var m = String(s).match(/^(\d{4})[-.]?(\d{1,2})?[-.]?(\d{1,2})?/);
+    if(!m) return null;
+    var y = +m[1], mo = m[2] ? +m[2] : 1, d = m[3] ? +m[3] : 1;
+    if(mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+    return {y:y, m:mo, d:d, t:Date.UTC(y, mo-1, d)};
+  }
+  function nowParts(){
+    var n = new Date();
+    return {y:n.getFullYear(), m:n.getMonth()+1, d:n.getDate(), t:Date.UTC(n.getFullYear(), n.getMonth(), n.getDate())};
+  }
+  function fmt(p){ return p.y + '년 ' + p.m + '월 ' + p.d + '일 (' + WD[new Date(p.t).getUTCDay()] + ')'; }
+
+  var target = ymd(q.get('date'));
+  var start  = ymd(q.get('start'));
+  var numEl = document.getElementById('num');
+  var preEl = document.getElementById('pre');
+
+  function render(){
+    var today = nowParts();
+    if(target){
+      document.getElementById('target').innerHTML = '<b>' + fmt(target) + '</b>';
+    } else {
+      document.getElementById('target').textContent = '오늘 · ' + fmt(today);
+    }
+    if(!target){
+      preEl.textContent = '';
+      numEl.textContent = 'TODAY';
+      numEl.style.fontSize = 'clamp(30px,9vw,54px)';
+      document.getElementById('kicker').textContent = 'TODAY';
+      document.getElementById('pct').textContent = fmt(today);
+      document.getElementById('pstart').textContent = '—';
+      document.getElementById('pend').textContent = '—';
+      ['left','gone','weeks'].forEach(function(id){ document.getElementById(id).textContent = '—'; });
+      return;
+    }
+    var diff = Math.round((target.t - today.t) / DAY);
+    var abs = Math.abs(diff);
+    numEl.classList.toggle('hot', abs <= 7);
+    if(diff > 0){ preEl.textContent = 'D-'; numEl.textContent = abs; }
+    else if(diff === 0){ preEl.textContent = ''; numEl.textContent = 'D-DAY'; numEl.style.fontSize = 'clamp(30px,8vw,58px)'; }
+    else { preEl.textContent = 'D+'; numEl.textContent = abs; }
+
+    document.getElementById('left').textContent = diff > 0 ? abs + '일' : (diff === 0 ? '오늘' : '—');
+    document.getElementById('gone').textContent = (start && diff >= 0) ? Math.max(0, Math.round((today.t - start.t)/DAY)) + '일' : '—';
+    document.getElementById('weeks').textContent = diff > 0 ? Math.ceil(abs/7) + '주' : '—';
+
+    if(start && start.t < target.t){
+      var total = Math.round((target.t - start.t) / DAY);
+      var done = Math.min(total, Math.max(0, Math.round((today.t - start.t) / DAY)));
+      var pct = Math.max(0, Math.min(100, done / total * 100));
+      document.getElementById('pct').textContent = pct.toFixed(pct >= 99.95 ? 0 : 1) + '%';
+      document.getElementById('pstart').textContent = '시작 ' + start.m + '.' + start.d;
+      document.getElementById('pend').textContent = '목표 ' + target.m + '.' + target.d;
+      requestAnimationFrame(function(){ document.getElementById('fill').style.width = pct.toFixed(2) + '%'; });
+      document.getElementById('gone').textContent = done + '일';
+    } else {
+      document.getElementById('pct').textContent = diff >= 0 ? '남은 ' + abs + '일' : '종료';
+      document.getElementById('pstart').textContent = '시작일 미지정';
+      document.getElementById('pend').textContent = '목표 ' + target.m + '.' + target.d;
+      document.getElementById('fill').style.width = diff > 0 ? '0%' : '100%';
+      document.getElementById('gone').textContent = '—';
+    }
+  }
+  render();
+
+  function tick(){
+    var n = new Date();
+    var hh = String(n.getHours()).padStart(2,'0');
+    var mm = String(n.getMinutes()).padStart(2,'0');
+    var ss = String(n.getSeconds()).padStart(2,'0');
+    document.getElementById('clock').textContent = hh + ':' + mm + ':' + ss;
+    var today = nowParts();
+    if(target && Math.round((target.t - today.t)/DAY) !== lastDiff){ lastDiff = Math.round((target.t - today.t)/DAY); render(); }
+  }
+  var lastDiff = null;
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>

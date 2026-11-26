@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko" data-theme="cream">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시계 · 오늘의 다짐</title>
+<style>
+  *{box-sizing:border-box}
+  :root{
+    --bg:#F4EEE3; --win:#FFFDF8; --bar:#FAF4E8; --ink:#2A2721; --muted:#8A8376; --line:#EADFCD;
+    --accent:#AD7949; --accent2:#6E8F6A; --soft:#F4EBDC; --shadow:0 12px 28px rgba(96,74,42,.13);
+  }
+  html[data-theme="sage"]{
+    --bg:#E9EFE6; --win:#FDFEFB; --bar:#F2F7F0; --ink:#243026; --muted:#78897C; --line:#D9E5D7;
+    --accent:#4F8261; --accent2:#8FB295; --soft:#E6F0E2; --shadow:0 12px 28px rgba(46,74,52,.14);
+  }
+  html[data-theme="navy"]{
+    --bg:#0C1220; --win:#141C2B; --bar:#19222F; --ink:#E9EEF7; --muted:#8492A8; --line:#27324A;
+    --accent:#7FA1FF; --accent2:#45CEB0; --soft:#1D2739; --shadow:0 14px 32px rgba(0,0,0,.5);
+  }
+  html[data-theme="blush"]{
+    --bg:#FAEEEF; --win:#FFFCFC; --bar:#FDF2F3; --ink:#33242A; --muted:#967C82; --line:#F0DADC;
+    --accent:#C06078; --accent2:#D89F8B; --soft:#F8E7E8; --shadow:0 12px 28px rgba(120,60,70,.14);
+  }
+  html,body{height:100%;margin:0}
+  body{
+    display:flex; padding:clamp(5px,1.6vw,13px); background:transparent; overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;
+    color:var(--ink); -webkit-font-smoothing:antialiased; font-size:14px;
+  }
+  .win{
+    flex:1; min-width:0; display:flex; flex-direction:column; border-radius:15px; background:var(--win);
+    border:1px solid var(--line); box-shadow:var(--shadow); overflow:hidden; position:relative;
+  }
+  .bar{
+    flex:0 0 34px; height:34px; display:flex; align-items:center; gap:10px; padding:0 12px;
+    background:var(--bar); border-bottom:1px solid var(--line);
+  }
+  .lights{display:flex; gap:6px; flex:none}
+  .lights i{display:block; width:9px; height:9px; border-radius:50%}
+  .lights .r{background:#FF5F57} .lights .y{background:#FEBC2E} .lights .g{background:#28C840}
+  .ttl{font-size:12.5px; font-weight:600; letter-spacing:-.01em; opacity:.82; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .spacer{flex:1}
+  .tz{font-size:10.5px; color:var(--muted); letter-spacing:.04em; white-space:nowrap}
+  main{
+    flex:1; min-height:0; display:flex; align-items:center; gap:clamp(10px,3.4vw,24px);
+    padding:clamp(8px,2.8vw,18px) clamp(10px,3vw,20px); flex-wrap:wrap;
+  }
+  .clockcol{flex:1 1 190px; min-width:0; display:flex; flex-direction:column; gap:7px; align-items:flex-start}
+  .clockrow{display:flex; align-items:center; gap:5px}
+  .d{
+    position:relative; display:flex; align-items:center; justify-content:center;
+    width:clamp(26px,6.6vw,38px); height:clamp(36px,9vw,52px); border-radius:8px;
+    background:var(--soft); border:1px solid var(--line); color:var(--ink);
+    font-size:clamp(21px,5.4vw,31px); font-weight:700; letter-spacing:-.03em; font-variant-numeric:tabular-nums;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .d::after{
+    content:""; position:absolute; left:1px; right:1px; top:50%; height:1px; background:var(--win); opacity:.55;
+  }
+  .d.flip{animation:flip .34s ease}
+  @keyframes flip{
+    0%{transform:rotateX(0deg)}
+    45%{transform:rotateX(-88deg)}
+    100%{transform:rotateX(0deg)}
+  }
+  .colon{font-size:clamp(16px,4vw,22px); font-weight:700; color:var(--muted); margin:0 1px; transform:translateY(-2px)}
+  .colon.blink{animation:blink 1s steps(1,end) infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .below{display:flex; align-items:baseline; gap:7px; font-size:11.5px; color:var(--muted); letter-spacing:-.01em}
+  .below b{color:var(--ink); font-weight:600}
+  .secs{font-variant-numeric:tabular-nums; font-size:10.5px; padding:1px 5px; border-radius:5px; background:var(--soft); color:var(--ink)}
+  .quote{
+    flex:1 1 210px; min-width:0; align-self:stretch; display:flex; flex-direction:column; gap:5px;
+    border-left:1px solid var(--line); padding-left:clamp(10px,3vw,20px); justify-content:center;
+  }
+  .qlbl{display:flex; align-items:center; gap:6px; font-size:10px; font-weight:700; letter-spacing:.14em; color:var(--accent); text-transform:uppercase}
+  .qlbl::after{content:""; flex:1; height:1px; background:var(--line)}
+  .qtext{
+    font-size:clamp(13px,3.2vw,15px); line-height:1.55; letter-spacing:-.02em; min-height:2.9em;
+    padding:4px 6px; margin:0 -6px; border-radius:8px; outline:none; cursor:text; overflow-wrap:anywhere;
+    transition:background .16s; color:var(--ink);
+  }
+  .qtext:hover{background:color-mix(in srgb,var(--soft) 60%, transparent)}
+  .qtext:focus{background:var(--soft)}
+  .qtext:empty::before{content:attr(data-ph); color:var(--muted); opacity:.75}
+  .qfoot{display:flex; align-items:center; gap:6px; font-size:10px; color:var(--muted); letter-spacing:-.01em}
+  .qfoot .saved{color:var(--accent2); opacity:0; transition:opacity .3s}
+  .qfoot .saved.show{opacity:1}
+  .qfoot .hint{margin-left:auto}
+  @media (max-width:470px){
+    .quote{border-left:0; border-top:1px solid var(--line); padding-left:0; padding-top:10px; flex-basis:100%}
+    .qtext{min-height:2.2em}
+  }
+  @media (prefers-reduced-motion:reduce){ .d.flip{animation:none} .colon.blink{animation:none} }
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+    <div class="ttl" id="ttl">오늘의 다짐</div>
+    <div class="spacer"></div>
+    <div class="tz">SEOUL · KST</div>
+  </div>
+  <main>
+    <section class="clockcol">
+      <div class="clockrow">
+        <span class="d" id="h1">0</span><span class="d" id="h2">0</span>
+        <span class="colon blink">:</span>
+        <span class="d" id="m1">0</span><span class="d" id="m2">0</span>
+      </div>
+      <div class="below"><b id="date">—</b><span class="secs" id="secs">00</span><span id="ampm"></span></div>
+    </section>
+    <section class="quote">
+      <div class="qlbl">오늘의 한 줄</div>
+      <div class="qtext" id="qtext" contenteditable="true" spellcheck="false"
+           data-ph="오늘 하루를 한 문장으로 — 클릭해서 적어 두세요"></div>
+      <div class="qfoot"><span>클릭해서 수정</span><span class="saved" id="saved">저장됨 ✓</span><span class="hint" id="hint"></span></div>
+    </section>
+  </main>
+</div>
+<script>
+(function(){
+  var q = new URLSearchParams(location.search);
+  var THEMES = ['cream','sage','navy','blush'];
+  var theme = (q.get('theme') || 'cream').toLowerCase();
+  document.documentElement.setAttribute('data-theme', THEMES.indexOf(theme) >= 0 ? theme : 'cream');
+  var title = (q.get('title') || '').trim() || '오늘의 다짐';
+  document.getElementById('ttl').textContent = title;
+  document.title = title;
+  var slug = (q.get('key') || title).replace(/\s+/g, '-').toLowerCase();
+
+  var WD = ['일','월','화','수','목','금','토'];
+  function dkey(d){
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  var qtext = document.getElementById('qtext');
+  var savedEl = document.getElementById('saved');
+  var QKEY = 'cq:' + slug + ':' + dkey(new Date());
+  try{
+    var v = localStorage.getItem(QKEY);
+    if(v) qtext.textContent = v;
+  }catch(e){}
+  var saveTimer = null;
+  function persist(){
+    try{ localStorage.setItem(QKEY, qtext.textContent.trim()); }catch(e){}
+    savedEl.classList.add('show');
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(function(){ savedEl.classList.remove('show'); }, 1600);
+  }
+  qtext.addEventListener('blur', persist);
+  qtext.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); qtext.blur(); }
+  });
+
+  var els = ['h1','h2','m1','m2'].map(function(id){ return document.getElementById(id); });
+  var prev = ['', '', '', ''];
+  function setDigit(el, ch, i){
+    if(prev[i] === ch) return;
+    prev[i] = ch;
+    el.textContent = ch;
+    el.classList.remove('flip');
+    void el.offsetWidth;
+    el.classList.add('flip');
+    setTimeout(function(){ el.classList.remove('flip'); }, 360);
+  }
+  function tick(){
+    var n = new Date();
+    var hh = String(n.getHours()).padStart(2,'0');
+    var mm = String(n.getMinutes()).padStart(2,'0');
+    setDigit(els[0], hh[0], 0); setDigit(els[1], hh[1], 1);
+    setDigit(els[2], mm[0], 2); setDigit(els[3], mm[1], 3);
+    document.getElementById('secs').textContent = String(n.getSeconds()).padStart(2,'0');
+    document.getElementById('date').textContent = n.getFullYear() + '년 ' + (n.getMonth()+1) + '월 ' + n.getDate() + '일 ' + WD[n.getDay()] + '요일';
+    var h = n.getHours();
+    document.getElementById('ampm').textContent = h < 12 ? '오전' : '오후';
+    var left = Math.max(0, 24*60 - (h*60 + n.getMinutes()));
+    document.getElementById('hint').textContent = '오늘 ' + Math.floor(left/60) + '시간 ' + (left%60) + '분 남음';
+    var cur = dkey(n);
+    if(QKEY.slice(-10) !== cur){ /* 날짜가 바뀌면 새 다짐 칸으로 전환 */ QKEY = 'cq:' + slug + ':' + cur; qtext.textContent = ''; }
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>
