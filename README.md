@@ -32,8 +32,8 @@ https://rorerty.github.io/1/clock-quote.html?theme=blush&title=오늘의+다짐
 
 ## 파라미터 상세
 
-**dday.html** — `date=YYYY-MM-DD`(목표일), `start=YYYY-MM-DD`(진행률 기준 시작일, 선택), `title`
-**gauge.html** — `label`, `current`(현재값), `goal`(목표값), `unit=원|%|권|...`(선택), `theme`
+**dday.html** — `date=YYYY-MM-DD`(목표일, `target=` 별칭), `start=YYYY-MM-DD`(진행률 기준 시작일, 선택), `title`
+**gauge.html** — `label`, `current`(현재값), `goal`(목표값, `target=` 별칭), `unit=원|%|권|...`(선택), `theme`
 그 외 위젯은 `theme`, `title`, `key`만 사용합니다.
 
 ## 노션에 넣는 법

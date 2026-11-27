@@ -156,7 +156,7 @@
   }
   function fmt(p){ return p.y + '년 ' + p.m + '월 ' + p.d + '일 (' + WD[new Date(p.t).getUTCDay()] + ')'; }
 
-  var target = ymd(q.get('date'));
+  var target = ymd(q.get('date') || q.get('target'));
   var start  = ymd(q.get('start'));
   var numEl = document.getElementById('num');
   var preEl = document.getElementById('pre');

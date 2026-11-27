@@ -126,7 +126,7 @@
   var label = (q.get('label') || q.get('title') || '목표 달성률').trim();
   var unit = q.get('unit') || '';
   var current = num(q.get('current'));
-  var goal = num(q.get('goal'));
+  var goal = num(q.get('goal') || q.get('target'));
 
   function num(v){
     if(v === null) return 0;
