@@ -170,8 +170,8 @@
     }
     if(!target){
       preEl.textContent = '';
-      numEl.textContent = 'TODAY';
-      numEl.style.fontSize = 'clamp(30px,9vw,54px)';
+      numEl.textContent = '—';
+      numEl.style.fontSize = 'clamp(36px,9vw,56px)';
       document.getElementById('kicker').textContent = 'TODAY';
       document.getElementById('pct').textContent = fmt(today);
       document.getElementById('pstart').textContent = '—';
@@ -182,9 +182,10 @@
     var diff = Math.round((target.t - today.t) / DAY);
     var abs = Math.abs(diff);
     numEl.classList.toggle('hot', abs <= 7);
-    if(diff > 0){ preEl.textContent = 'D-'; numEl.textContent = abs; }
-    else if(diff === 0){ preEl.textContent = ''; numEl.textContent = 'D-DAY'; numEl.style.fontSize = 'clamp(30px,8vw,58px)'; }
-    else { preEl.textContent = 'D+'; numEl.textContent = abs; }
+    var kicker = document.getElementById('kicker');
+    if(diff > 0){ preEl.textContent = 'D-'; numEl.textContent = abs; kicker.textContent = 'D-DAY'; }
+    else if(diff === 0){ preEl.textContent = ''; numEl.textContent = 'D-DAY'; numEl.style.fontSize = 'clamp(30px,8vw,58px)'; kicker.textContent = 'TODAY'; }
+    else { preEl.textContent = 'D+'; numEl.textContent = abs; kicker.textContent = 'D-DAY'; }
 
     document.getElementById('left').textContent = diff > 0 ? abs + '일' : (diff === 0 ? '오늘' : '—');
     document.getElementById('gone').textContent = (start && diff >= 0) ? Math.max(0, Math.round((today.t - start.t)/DAY)) + '일' : '—';
