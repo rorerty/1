@@ -72,7 +72,8 @@
   .track{position:relative; height:8px; border-radius:99px; background:var(--soft); overflow:hidden}
   .fill{height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,var(--accent2),var(--accent)); transition:width 1s cubic-bezier(.2,.8,.2,1)}
   .fill.over{background:linear-gradient(90deg,var(--accent),var(--warn))}
-  .foot{display:flex; justify-content:space-between; align-items:baseline; font-size:11px; color:var(--muted); letter-spacing:-.01em}
+  .foot{display:flex; flex-wrap:wrap; gap:2px 8px; font-size:10.5px; color:var(--muted); letter-spacing:-.01em; line-height:1.5}
+  .foot>span{white-space:nowrap}
   .foot b{color:var(--ink); font-weight:650; font-variant-numeric:tabular-nums}
   .foot .warnb{color:var(--warn)}
   @media (prefers-reduced-motion:reduce){ .rfg,.fill{transition:none} }
@@ -180,7 +181,7 @@
   var paceEl = document.getElementById('pace');
   if(goal > 0){
     var diff = shown - dayRatio;
-    paceEl.innerHTML = '월 경과 ' + Math.round(dayRatio) + '% · ' +
+    paceEl.innerHTML = '월 ' + Math.round(dayRatio) + '% 경과 · ' +
       (diff >= 0 ? '<b>+' + Math.round(diff) + 'p 앞섬</b>' : '<b>' + Math.round(diff) + 'p 뒤처짐</b>');
   } else {
     paceEl.textContent = '';
