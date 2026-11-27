@@ -68,7 +68,7 @@
   .seg button[data-q="q1"].on{background:var(--q1)} .seg button[data-q="q2"].on{background:var(--q2)}
   .seg button[data-q="q3"].on{background:var(--q3)} .seg button[data-q="q4"].on{background:var(--q4)}
   .grid{
-    flex:1; min-height:0; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+    flex:1; min-height:0; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:minmax(0,1fr) minmax(0,1fr);
     gap:6px; padding:7px 9px 9px; width:100%; max-width:1000px; margin:0 auto;
   }
   .quad{
