@@ -2,7 +2,7 @@
 
 노션 `/embed`에 URL만 넣으면 동작하는 **단일 파일 위젯**입니다. 빌드·서버·계정·API 키가 필요 없고, 모든 데이터는 브라우저 `localStorage`에만 저장됩니다.
 
-**갤러리(미리보기)**: https://rorerty.github.io/notion-widgets/
+**갤러리(미리보기)**: https://rorerty.github.io/1/
 
 ## 위젯
 
@@ -23,11 +23,11 @@
 ## 예시
 
 ```
-https://rorerty.github.io/notion-widgets/dday.html?theme=sage&title=건강운동관리사+필기&date=2027-05-15&start=2026-11-01
-https://rorerty.github.io/notion-widgets/pomodoro.html?theme=cream&title=오전+집중
-https://rorerty.github.io/notion-widgets/matrix.html?theme=navy&title=오늘의+포커스
-https://rorerty.github.io/notion-widgets/gauge.html?theme=cream&label=11월+매출+목표&current=2200000&goal=3000000&unit=원
-https://rorerty.github.io/notion-widgets/clock-quote.html?theme=blush&title=오늘의+다짐
+https://rorerty.github.io/1/dday.html?theme=sage&title=건강운동관리사+필기&date=2027-05-15&start=2026-11-01
+https://rorerty.github.io/1/pomodoro.html?theme=cream&title=오전+집중
+https://rorerty.github.io/1/matrix.html?theme=navy&title=오늘의+포커스
+https://rorerty.github.io/1/gauge.html?theme=cream&label=11월+매출+목표&current=2200000&goal=3000000&unit=원
+https://rorerty.github.io/1/clock-quote.html?theme=blush&title=오늘의+다짐
 ```
 
 ## 파라미터 상세
