@@ -52,7 +52,7 @@
   .clock{font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums; letter-spacing:.02em; white-space:nowrap}
   main{
     flex:1; min-height:0; display:flex; align-items:center; gap:clamp(10px,3.2vw,26px);
-    padding:clamp(10px,3vw,20px); flex-wrap:wrap;
+    padding:clamp(8px,2.6vw,18px); flex-wrap:wrap;
   }
   .hero{flex:1 1 150px; min-width:0; display:flex; flex-direction:column; gap:2px}
   .kicker{
@@ -63,13 +63,13 @@
   .big{display:flex; align-items:baseline; gap:2px; line-height:.95; letter-spacing:-.045em}
   .big .pre{font-size:clamp(18px,4.6vw,30px); font-weight:700; color:var(--accent); letter-spacing:-.02em}
   .big .num{
-    font-size:clamp(46px,13vw,84px); font-weight:750; color:var(--ink);
+    font-size:clamp(42px,11.5vw,80px); font-weight:750; color:var(--ink);
     font-variant-numeric:tabular-nums; letter-spacing:-.05em;
   }
   .big .num.hot{color:var(--accent)}
   .target{margin-top:4px; font-size:12.5px; color:var(--muted); letter-spacing:-.01em}
   .target b{color:var(--ink); font-weight:600}
-  .side{flex:1 1 210px; min-width:0; display:flex; flex-direction:column; gap:12px}
+  .side{flex:1 1 210px; min-width:0; display:flex; flex-direction:column; gap:10px}
   .ptop{display:flex; justify-content:space-between; align-items:baseline; font-size:11.5px; color:var(--muted); margin-bottom:6px}
   .ptop b{font-size:12.5px; color:var(--ink); font-variant-numeric:tabular-nums; font-weight:650}
   .track{height:8px; border-radius:99px; background:var(--soft); overflow:hidden}
@@ -78,18 +78,24 @@
     background:linear-gradient(90deg,var(--accent2),var(--accent));
     transition:width 1.1s cubic-bezier(.2,.8,.2,1);
   }
-  .pbot{display:flex; justify-content:space-between; margin-top:6px; font-size:10.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .pbot{display:flex; justify-content:space-between; margin-top:5px; font-size:10.5px; color:var(--muted); font-variant-numeric:tabular-nums}
   .stats{display:flex; gap:6px}
   .chip{
-    flex:1; min-width:0; padding:7px 8px; border-radius:10px; background:var(--soft);
+    flex:1; min-width:0; padding:6px 8px; border-radius:10px; background:var(--soft);
     display:flex; flex-direction:column; gap:1px;
   }
   .chip span{font-size:10px; color:var(--muted); letter-spacing:-.01em; white-space:nowrap}
   .chip b{font-size:14px; font-weight:700; letter-spacing:-.02em; font-variant-numeric:tabular-nums; white-space:nowrap}
-  @media (max-width:430px){
+  @media (max-width:460px){
     .ttl{max-width:40%}
     .side{flex-basis:100%}
     .stats .chip:nth-child(3){display:none}
+    main{gap:8px}
+    .kicker{font-size:9.5px}
+    .big .num{font-size:clamp(38px,11vw,52px)}
+    .target{font-size:11.5px; margin-top:2px}
+    .ptop b{font-size:12px}
+    .chip b{font-size:13px}
   }
   @media (prefers-reduced-motion:reduce){.fill{transition:none}}
 </style>
