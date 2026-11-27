@@ -28,7 +28,7 @@
   }
   html,body{height:100%;margin:0}
   body{
-    display:flex; padding:clamp(5px,1.6vw,13px); background:transparent; overflow:hidden;
+    display:flex; padding:clamp(4px,1.2vw,10px); background:transparent; overflow:hidden;
     font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;
     color:var(--ink); -webkit-font-smoothing:antialiased; font-size:14px;
   }
@@ -37,7 +37,7 @@
     border:1px solid var(--line); box-shadow:var(--shadow); overflow:hidden;
   }
   .bar{
-    flex:0 0 34px; height:34px; display:flex; align-items:center; gap:10px; padding:0 12px;
+    flex:0 0 32px; height:32px; display:flex; align-items:center; gap:10px; padding:0 12px;
     background:var(--bar); border-bottom:1px solid var(--line);
   }
   .lights{display:flex; gap:6px; flex:none}
@@ -45,8 +45,12 @@
   .lights .r{background:#FF5F57} .lights .y{background:#FEBC2E} .lights .g{background:#28C840}
   .ttl{font-size:12.5px; font-weight:600; letter-spacing:-.01em; opacity:.82; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:50%}
   .spacer{flex:1}
+  .prog{display:flex; align-items:center; gap:6px; flex:none}
+  .prog .track{width:64px; height:4px; border-radius:3px; background:var(--line); overflow:hidden}
+  .prog .fill{height:100%; width:0%; border-radius:3px; background:var(--accent); transition:width .25s}
+  .prog .pct{font-size:10px; color:var(--muted); font-variant-numeric:tabular-nums}
   .date{font-size:11px; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
-  .addrow{display:flex; align-items:center; gap:6px; padding:8px max(10px, calc(50% - 500px)); border-bottom:1px solid var(--line); background:color-mix(in srgb,var(--bar) 55%, var(--win))}
+  .addrow{display:flex; align-items:center; gap:6px; padding:7px max(10px, calc(50% - 500px)); border-bottom:1px solid var(--line); background:color-mix(in srgb,var(--bar) 55%, var(--win))}
   .addrow input{
     flex:1; min-width:0; appearance:none; border:1px solid var(--line); background:var(--win); color:var(--ink);
     font:inherit; font-size:12px; padding:6px 10px; border-radius:8px; outline:none; letter-spacing:-.01em;
@@ -65,7 +69,7 @@
   .seg button[data-q="q3"].on{background:var(--q3)} .seg button[data-q="q4"].on{background:var(--q4)}
   .grid{
     flex:1; min-height:0; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
-    gap:7px; padding:8px 10px 10px; width:100%; max-width:1000px; margin:0 auto;
+    gap:6px; padding:7px 9px 9px; width:100%; max-width:1000px; margin:0 auto;
   }
   .quad{
     min-width:0; min-height:0; display:flex; flex-direction:column; border-radius:10px; overflow:hidden;
@@ -73,13 +77,13 @@
     transition:border-color .16s, background .16s, transform .16s;
   }
   .quad.over{border-color:var(--accent); background:color-mix(in srgb,var(--soft) 100%, var(--win))}
-  .qhead{display:flex; align-items:center; gap:5px; padding:6px 8px 3px; flex:none}
+  .qhead{display:flex; align-items:center; gap:5px; padding:5px 8px 2px; flex:none}
   .dot{width:7px; height:7px; border-radius:50%; flex:none}
   .q1 .dot{background:var(--q1)} .q2 .dot{background:var(--q2)} .q3 .dot{background:var(--q3)} .q4 .dot{background:var(--q4)}
   .qname{font-size:11px; font-weight:650; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
   .qsub{font-size:9.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; letter-spacing:-.01em}
   .qcount{font-size:9.5px; color:var(--muted); font-variant-numeric:tabular-nums; flex:none}
-  .list{flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:2px 6px 6px; display:flex; flex-direction:column; gap:3px}
+  .list{flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:2px 5px 5px; display:flex; flex-direction:column; gap:3px}
   .list::-webkit-scrollbar{width:4px}
   .list::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px}
   .item{
@@ -107,11 +111,11 @@
   .item:hover .move, .item:hover .del, .move:focus-visible, .del:focus-visible{opacity:.75}
   .move:hover{color:var(--accent)} .del:hover{color:var(--q1)}
   .empty{font-size:10px; color:var(--muted); opacity:.6; padding:5px 7px; letter-spacing:-.01em}
-  .count{font-size:10px; color:var(--muted); font-variant-numeric:tabular-nums}
   @media (max-width:420px){
     .qsub{display:none}
     .item{font-size:11px; padding:3px 5px}
     .addrow input{font-size:11.5px}
+    .prog .track{width:48px}
   }
 </style>
 </head>
@@ -121,6 +125,7 @@
     <div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
     <div class="ttl" id="ttl">오늘의 포커스 보드</div>
     <div class="spacer"></div>
+    <div class="prog"><div class="track"><div class="fill" id="pfill"></div></div><span class="pct" id="ppct">0%</span></div>
     <div class="date" id="date"></div>
   </div>
   <div class="addrow">
@@ -128,7 +133,7 @@
     <div class="seg" id="seg">
       <button data-q="q1" class="on" title="긴급·중요">1</button>
       <button data-q="q2" title="중요·비긴급">2</button>
-      <button data-q="q3" title="긴급·비긴급">3</button>
+      <button data-q="q3" title="긴급·비중요">3</button>
       <button data-q="q4" title="나머지">4</button>
     </div>
   </div>
@@ -137,10 +142,31 @@
 <script>
 (function(){
   var q = new URLSearchParams(location.search);
+
+  /* ── 프리셋: ?preset=exam → 수험생용 기본 라벨·초기 태스크 ───────────── */
+  var PRESETS = {
+    exam: {
+      title: '오늘의 학습 우선순위',
+      labels: {q1:'긴급 · 중요', q2:'중요 · 비긴급', q3:'긴급 · 비중요', q4:'나머지'},
+      subs:   {q1:'지금 바로', q2:'계획해서', q3:'빠르게 처리', q4:'오늘은 미루기'},
+      tasks: [
+        {q:'q1', text:'오늘 복습 예정 오답 3건 풀기'},
+        {q:'q1', text:'시험 범위 마지막 단원 정리'},
+        {q:'q2', text:'네트워크 서브넷 단원 2회독'},
+        {q:'q2', text:'취약 과목 기출 20문제 풀기'},
+        {q:'q3', text:'오답 1건 기록하고 복습 단계 올리기'},
+        {q:'q4', text:'다음 모의고사 시간 재고 풀기'}
+      ]
+    }
+  };
+  var presetName = (q.get('preset') || '').toLowerCase();
+  var preset = PRESETS[presetName] || null;
+
   var THEMES = ['cream','sage','navy','blush'];
   var theme = (q.get('theme') || 'cream').toLowerCase();
   document.documentElement.setAttribute('data-theme', THEMES.indexOf(theme) >= 0 ? theme : 'cream');
-  var title = (q.get('title') || '').trim() || '오늘의 포커스 보드';
+
+  var title = (q.get('title') || '').trim() || (preset ? preset.title : '오늘의 포커스 보드');
   document.getElementById('ttl').textContent = title;
   document.title = title;
   var slug = (q.get('key') || title).replace(/\s+/g, '-').toLowerCase();
@@ -148,15 +174,43 @@
   var QUADS = [
     {id:'q1', name:'긴급 · 중요', sub:'지금 바로'},
     {id:'q2', name:'중요 · 비긴급', sub:'계획해서'},
-    {id:'q3', name:'긴급 · 비긴급', sub:'빠르게 처리'},
+    {id:'q3', name:'긴급 · 비중요', sub:'빠르게 처리'},
     {id:'q4', name:'나머지', sub:'오늘은 미루기'}
   ];
+  /* 라벨 커스터마이즈: ?labels=긴급;중요;급함;나중  /  ?subs=지금;계획;처리;미루기 */
+  if (preset && preset.labels) QUADS.forEach(function(x, i){ x.name = preset.labels[x.id] || x.name; });
+  if (preset && preset.subs)   QUADS.forEach(function(x){ x.sub = preset.subs[x.id] || x.sub; });
+  var labels = (q.get('labels') || '').split(';');
+  if (labels.length === 4 && labels.join('')) QUADS.forEach(function(x, i){ if(labels[i].trim()) x.name = labels[i].trim(); });
+  var subs = (q.get('subs') || '').split(';');
+  if (subs.length === 4 && subs.join('')) QUADS.forEach(function(x, i){ if(subs[i].trim()) x.sub = subs[i].trim(); });
+
   var WD = ['일','월','화','수','목','금','토'];
   var n = new Date();
   document.getElementById('date').textContent = (n.getMonth()+1) + '/' + n.getDate() + ' (' + WD[n.getDay()] + ')';
 
   var KEY = 'mx:' + slug;
   var items = [];
+  function parseTasks(s){
+    var out = [];
+    String(s || '').split(';').forEach(function(chunk){
+      var t = chunk.trim(); if(!t) return;
+      var m = t.match(/^(q[1-4])\s*[:|]\s*(.+)$/i);
+      if(m) out.push({q: m[1].toLowerCase(), text: m[2].trim()});
+      else out.push({q: 'q1', text: t});
+    });
+    return out;
+  }
+  function seedTasks(){
+    var fromUrl = parseTasks(q.get('tasks'));
+    if(fromUrl.length) return fromUrl;
+    if(preset && preset.tasks) return preset.tasks.slice();
+    return [
+      {text:'오늘 반드시 끝낼 한 가지', q:'q1'},
+      {text:'이번 주 목표로 이어지는 일', q:'q2'},
+      {text:'5분 안에 처리할 연락', q:'q3'}
+    ];
+  }
   function load(){
     try{
       var raw = localStorage.getItem(KEY);
@@ -166,11 +220,9 @@
       }
     }catch(e){}
     if(!items.length){
-      items = [
-        {id:'s1', text:'오늘 반드시 끝낼 한 가지', q:'q1', done:false},
-        {id:'s2', text:'이번 주 목표로 이어지는 일', q:'q2', done:false},
-        {id:'s3', text:'5분 안에 처리할 연락', q:'q3', done:false}
-      ];
+      items = seedTasks().map(function(t, i){
+        return {id:'s' + (i+1), text: t.text, q: t.q || 'q1', done:false};
+      });
     }
   }
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(items)); }catch(e){} }
@@ -181,9 +233,11 @@
     var el = document.createElement('section');
     el.className = 'quad ' + quad.id;
     el.innerHTML =
-      '<div class="qhead"><span class="dot"></span><span class="qname">' + quad.name + '</span>' +
-      '<span class="qsub">' + quad.sub + '</span><span class="qcount" data-count></span></div>' +
+      '<div class="qhead"><span class="dot"></span><span class="qname"></span>' +
+      '<span class="qsub"></span><span class="qcount" data-count></span></div>' +
       '<div class="list" data-list></div>';
+    el.querySelector('.qname').textContent = quad.name;
+    el.querySelector('.qsub').textContent = quad.sub;
     grid.appendChild(el);
     lists[quad.id] = el.querySelector('[data-list]');
 
@@ -206,6 +260,15 @@
   });
 
   function uid(){ return 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+  function paintProgress(){
+    var total = items.length;
+    var done = items.filter(function(x){ return x.done; }).length;
+    var pct = total ? Math.round(done / total * 100) : 0;
+    document.getElementById('pfill').style.width = pct + '%';
+    document.getElementById('ppct').textContent = total ? (done + '/' + total + ' ' + pct + '%') : '0%';
+    document.getElementById('ppct').title = total ? (total + '개 중 ' + done + '개 완료') : '할 일을 추가해 보세요';
+  }
 
   function render(){
     QUADS.forEach(function(quad){
@@ -269,11 +332,11 @@
         row.addEventListener('dragend', function(){ row.classList.remove('drag'); window.__dragId = null; });
         list.appendChild(row);
       });
-      var head = grid.querySelector('.' + quad.id + ' [data-head]');
       var cEl = grid.querySelector('.' + quad.id + ' [data-count]');
       var open = rows.filter(function(r){ return !r.done; }).length;
       cEl.textContent = rows.length ? (open + '/' + rows.length) : '';
     });
+    paintProgress();
   }
 
   function moveItem(id, to){
