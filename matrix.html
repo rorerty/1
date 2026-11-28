@@ -26,6 +26,12 @@
     --accent:#C06078; --accent2:#D89F8B; --soft:#F8E7E8; --shadow:0 12px 28px rgba(120,60,70,.14);
     --q1:#C06078; --q2:#D89F8B; --q3:#C79A54; --q4:#98838A;
   }
+
+  html[data-theme="emerald"]{
+    --bg:#0E2A22; --win:#12352B; --bar:#0F2E25; --ink:#F4F0E3; --muted:#9CB3A4; --line:#254B3D;
+    --accent:#D8B25E; --accent2:#6FBF9A; --soft:#173B2F; --shadow:0 14px 32px rgba(0,0,0,.45);
+    --warn:#E08A5B; --q1:#D8B25E; --q2:#6FBF9A; --q3:#C9905A; --q4:#7E907F;
+  }
   html,body{height:100%;margin:0}
   body{
     display:flex; padding:clamp(4px,1.2vw,10px); background:transparent; overflow:hidden;
@@ -170,12 +176,25 @@
         {q:'q3', text:'세금계산서 발행'},
         {q:'q4', text:'월말 세무 정산'}
       ]
+    },
+    finance: {
+      title: '이번 달 돈 점검 우선순위',
+      labels: {q1:'고정비 점검', q2:'구독 정리', q3:'예산 조정', q4:'저축 이체'},
+      subs:   {q1:'이번 주 안에', q2:'비교해서', q3:'금액만 조정', q4:'월말에 실행'},
+      tasks: [
+        {q:'q1', text:'이번 달 고정비 내역 확인'},
+        {q:'q1', text:'카드 결제 예정일·금액 점검'},
+        {q:'q2', text:'안 쓰는 구독 1개 해지하기'},
+        {q:'q2', text:'연간 결제가 유리한 구독 비교'},
+        {q:'q3', text:'식비 예산 10% 줄여 재설정'},
+        {q:'q4', text:'월급일 다음 날 저축 이체 확인'}
+      ]
     }
   };
   var presetName = (q.get('preset') || '').toLowerCase();
   var preset = PRESETS[presetName] || null;
 
-  var THEMES = ['cream','sage','navy','blush'];
+  var THEMES = ['cream','sage','navy','blush','emerald'];
   var theme = (q.get('theme') || 'cream').toLowerCase();
   document.documentElement.setAttribute('data-theme', THEMES.indexOf(theme) >= 0 ? theme : 'cream');
 

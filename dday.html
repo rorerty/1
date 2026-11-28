@@ -22,6 +22,12 @@
     --bg:#FAEEEF; --win:#FFFCFC; --bar:#FDF2F3; --ink:#33242A; --muted:#967C82; --line:#F0DADC;
     --accent:#C06078; --accent2:#D89F8B; --soft:#F8E7E8; --shadow:0 12px 28px rgba(120,60,70,.14);
   }
+
+  html[data-theme="emerald"]{
+    --bg:#0E2A22; --win:#12352B; --bar:#0F2E25; --ink:#F4F0E3; --muted:#9CB3A4; --line:#254B3D;
+    --accent:#D8B25E; --accent2:#6FBF9A; --soft:#173B2F; --shadow:0 14px 32px rgba(0,0,0,.45);
+    --warn:#E08A5B; --q1:#D8B25E; --q2:#6FBF9A; --q3:#C9905A; --q4:#7E907F;
+  }
   html,body{height:100%;margin:0}
   body{
     display:flex; padding:clamp(5px,1.6vw,13px); background:transparent; overflow:hidden;
@@ -131,7 +137,7 @@
 <script>
 (function(){
   var q = new URLSearchParams(location.search);
-  var THEMES = ['cream','sage','navy','blush'];
+  var THEMES = ['cream','sage','navy','blush','emerald'];
   var theme = (q.get('theme') || 'cream').toLowerCase();
   document.documentElement.setAttribute('data-theme', THEMES.indexOf(theme) >= 0 ? theme : 'cream');
 
